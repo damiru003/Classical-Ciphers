@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classical Ciphers - Interactive Web Interface</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-lock"></i>
+                    <h1>Classical Ciphers</h1>
+                </div>
+                <p class="subtitle">Explore the world of classical cryptography</p>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav-tabs">
+            <button class="nav-tab active" data-cipher="caesar">
+                <i class="fas fa-exchange-alt"></i>
+                Caesar Cipher
+            </button>
+            <button class="nav-tab" data-cipher="vigenere">
+                <i class="fas fa-key"></i>
+                Vigenère Cipher
+            </button>
+            <button class="nav-tab" data-cipher="playfair">
+                <i class="fas fa-th"></i>
+                Playfair Cipher
+            </button>
+            <button class="nav-tab" data-cipher="test">
+                <i class="fas fa-flask"></i>
+                Test Cases
+            </button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <!-- Caesar Cipher Panel -->
+            <div class="cipher-panel active" id="caesar-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-exchange-alt"></i> Caesar Cipher</h2>
+                    <p>A simple substitution cipher where each letter is shifted by a fixed number of positions.</p>
+                </div>
+
+                <div class="content-grid">
+                    <div class="input-section">
+                        <div class="form-group">
+                            <label for="caesar-text">Enter Text:</label>
+                            <textarea id="caesar-text" placeholder="Enter your text here..." rows="4"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="caesar-shift">Shift Value:</label>
+                            <div class="shift-input">
+                                <input type="number" id="caesar-shift" value="3" min="-25" max="25">
+                                <div class="shift-slider">
+                                    <input type="range" id="caesar-slider" min="-25" max="25" value="3">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="button-group">
+                            <button class="btn btn-primary" onclick="caesarOperation('encrypt')">
+                                <i class="fas fa-lock"></i> Encrypt
+                            </button>
+                            <button class="btn btn-secondary" onclick="caesarOperation('decrypt')">
+                                <i class="fas fa-unlock"></i> Decrypt
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="output-section">
+                        <div class="result-card">
+                            <h3><i class="fas fa-arrow-right"></i> Result</h3>
+                            <div id="caesar-result" class="result-text">Result will appear here...</div>
+                            <div id="caesar-formatted" class="formatted-result"></div>
+                            <button class="copy-btn" onclick="copyResult('caesar-result')">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vigenère Cipher Panel -->
+            <div class="cipher-panel" id="vigenere-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-key"></i> Vigenère Cipher</h2>
+                    <p>A polyalphabetic substitution cipher using a repeating keyword to determine shifts.</p>
+                </div>
+
+                <div class="content-grid">
+                    <div class="input-section">
+                        <div class="form-group">
+                            <label for="vigenere-text">Enter Text:</label>
+                            <textarea id="vigenere-text" placeholder="Enter your text here..." rows="4"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="vigenere-key">Key:</label>
+                            <input type="text" id="vigenere-key" placeholder="Enter alphabetic key (e.g., LEMON)">
+                            <div class="key-info">
+                                <small><i class="fas fa-info-circle"></i> Key must contain only letters</small>
+                            </div>
+                        </div>
+
+                        <div class="button-group">
+                            <button class="btn btn-primary" onclick="vigenereOperation('encrypt')">
+                                <i class="fas fa-lock"></i> Encrypt
+                            </button>
+                            <button class="btn btn-secondary" onclick="vigenereOperation('decrypt')">
+                                <i class="fas fa-unlock"></i> Decrypt
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="output-section">
+                        <div class="result-card">
+                            <h3><i class="fas fa-arrow-right"></i> Result</h3>
+                            <div id="vigenere-result" class="result-text">Result will appear here...</div>
+                            <button class="copy-btn" onclick="copyResult('vigenere-result')">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                        
+                        <div class="key-visualization" id="vigenere-visualization">
+                            <!-- Key visualization will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Playfair Cipher Panel -->
+            <div class="cipher-panel" id="playfair-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-th"></i> Playfair Cipher</h2>
+                    <p>A digraph substitution cipher using a 5×5 key square (J merged with I).</p>
+                </div>
+
+                <div class="content-grid">
+                    <div class="input-section">
+                        <div class="form-group">
+                            <label for="playfair-text">Enter Text:</label>
+                            <textarea id="playfair-text" placeholder="Enter your text here..." rows="4"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="playfair-key">Key:</label>
+                            <input type="text" id="playfair-key" placeholder="Enter alphabetic key (e.g., PLAYFAIREXAMPLE)">
+                            <div class="key-info">
+                                <small><i class="fas fa-info-circle"></i> Key creates the 5×5 matrix. J is merged with I.</small>
+                            </div>
+                        </div>
+
+                        <div class="button-group">
+                            <button class="btn btn-primary" onclick="playfairOperation('encrypt')">
+                                <i class="fas fa-lock"></i> Encrypt
+                            </button>
+                            <button class="btn btn-secondary" onclick="playfairOperation('decrypt')">
+                                <i class="fas fa-unlock"></i> Decrypt
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="output-section">
+                        <div class="result-card">
+                            <h3><i class="fas fa-arrow-right"></i> Result</h3>
+                            <div id="playfair-result" class="result-text">Result will appear here...</div>
+                            <div id="playfair-prepared" class="prepared-text"></div>
+                            <button class="copy-btn" onclick="copyResult('playfair-result')">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+
+                        <div class="matrix-display" id="playfair-matrix">
+                            <!-- Matrix will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Test Cases Panel -->
+            <div class="cipher-panel" id="test-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-flask"></i> Test Cases</h2>
+                    <p>Verify implementation with official test cases for automated grading.</p>
+                </div>
+
+                <div class="test-section">
+                    <button class="btn btn-primary btn-large" onclick="runAllTests()">
+                        <i class="fas fa-play"></i> Run All Test Cases
+                    </button>
+
+                    <div class="test-results" id="test-results">
+                        <!-- Test results will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2025 Classical Ciphers Project - Educational Use</p>
+        </footer>
+    </div>
+
+    <!-- Success/Error Toast -->
+    <div class="toast" id="toast">
+        <div class="toast-content">
+            <i class="toast-icon"></i>
+            <span class="toast-message"></span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -302,7 +302,7 @@ class UIController {
                 <i class="fas fa-eye"></i> Key Pattern Visualization
             </div>
             <div class="key-pattern">
-                ${cleanedKey.split('').map(char => `<div class="key-char">${char}</div>`).join('')}
+                ${cleanedKey.split('').map((char, index) => `<div class="key-char" style="--char-index: ${index}">${char}</div>`).join('')}
             </div>
         `;
     }
@@ -325,9 +325,11 @@ class UIController {
                 <div class="matrix-grid">
             `;
             
+            let cellIndex = 0;
             for (let i = 0; i < 5; i++) {
                 for (let j = 0; j < 5; j++) {
-                    matrixHTML += `<div class="matrix-cell">${matrix[i][j]}</div>`;
+                    matrixHTML += `<div class="matrix-cell" style="--cell-index: ${cellIndex}">${matrix[i][j]}</div>`;
+                    cellIndex++;
                 }
             }
             
@@ -658,9 +660,9 @@ function runAllTests() {
             </div>
         `;
         
-        tests.forEach(test => {
+        tests.forEach((test, index) => {
             resultsHTML += `
-                <div class="test-case">
+                <div class="test-case" style="--test-index: ${index}">
                     <div class="test-header">
                         <div class="test-title">${test.title}</div>
                         <div class="test-status ${test.pass ? 'pass' : 'fail'}">
